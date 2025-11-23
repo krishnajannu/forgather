@@ -135,20 +135,21 @@ function App() {
       {/* Decorative Background Elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
          <div className="absolute -top-[20%] -left-[10%] w-[600px] h-[600px] bg-brand/10 rounded-full blur-[100px] mix-blend-multiply animate-blob" />
-         <div className="absolute top-[20%] -right-[10%] w-[500px] h-[500px] bg-danger/10 rounded-full blur-[100px] mix-blend-multiply animate-blob animation-delay-2000" />
-         <div className="absolute -bottom-[20%] left-[20%] w-[600px] h-[600px] bg-tertiary/50 rounded-full blur-[100px] mix-blend-multiply animate-blob animation-delay-4000" />
+         <div className="absolute top-[20%] -right-[10%] w-[500px] h-[500px] bg-secondary/20 rounded-full blur-[100px] mix-blend-multiply animate-blob animation-delay-2000" />
+         {/* Bright Gold tertiary needs low opacity to not look neon */}
+         <div className="absolute -bottom-[20%] left-[20%] w-[600px] h-[600px] bg-tertiary/20 rounded-full blur-[100px] mix-blend-multiply animate-blob animation-delay-4000" />
       </div>
   
       <div className="relative z-10 flex-1 flex flex-col justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-12">
          
          {/* Minimal Header Text */}
          <div className="text-center mb-12 space-y-6">
-            <div className="inline-flex items-center px-3 py-1 rounded-full border border-secondary/40 bg-white/50 backdrop-blur-sm text-xs font-medium text-primary/70 mb-4 animate-fade-in-up">
-              <Sparkles className="w-3 h-3 mr-2 text-brand" />
+            <div className="inline-flex items-center px-3 py-1 rounded-full border border-secondary/40 bg-white/80 backdrop-blur-sm text-xs font-medium text-brand mb-4 animate-fade-in-up shadow-sm">
+              <Sparkles className="w-3 h-3 mr-2 text-secondary" />
               Premium Venue Marketplace
             </div>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-primary tracking-tighter leading-[1.1] animate-fade-in-up delay-100">
-              Crafting <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand to-danger">unforgettable</span><br className="hidden md:block" /> moments.
+              Crafting <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand to-secondary">unforgettable</span><br className="hidden md:block" /> moments.
             </h1>
             <p className="text-lg md:text-xl text-primary/70 max-w-2xl mx-auto font-light leading-relaxed animate-fade-in-up delay-200 mb-8">
               Discover and book the finest banquet halls, lounges, and resorts.
@@ -157,17 +158,17 @@ function App() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up delay-300 pt-8">
                 <div className="flex -space-x-3">
                   {[1,2,3,4].map(i => (
-                    <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-tertiary/50 flex items-center justify-center overflow-hidden">
+                    <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-tertiary/40 flex items-center justify-center overflow-hidden shadow-sm">
                         <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" className="w-full h-full object-cover" />
                     </div>
                   ))}
-                  <div className="w-10 h-10 rounded-full border-2 border-white bg-brand/10 text-brand font-bold flex items-center justify-center text-xs">
+                  <div className="w-10 h-10 rounded-full border-2 border-white bg-brand text-white font-bold flex items-center justify-center text-xs shadow-sm">
                     2k+
                   </div>
                 </div>
                 <div className="text-sm font-semibold text-primary/80">
                   Trusted by happy customers
-                  <div className="flex text-brand mt-0.5 justify-center sm:justify-start">
+                  <div className="flex text-gold mt-0.5 justify-center sm:justify-start">
                       {[1,2,3,4,5].map(i => <Star key={i} className="w-3 h-3 fill-current" />)}
                   </div>
                 </div>
@@ -211,7 +212,7 @@ function App() {
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                 />
                 
-                {/* Gradient Overlay - Darkened for better text contrast */}
+                {/* Gradient Overlay - Uses Brand Color */}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black/80 group-hover:via-black/40 group-hover:to-brand/80 transition-all duration-700 z-10" />
 
                 {/* Card Content */}
@@ -306,7 +307,7 @@ function App() {
                   step="10000"
                   value={priceRange[1]}
                   onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
-                  className="w-full h-2 bg-tertiary/60 rounded-lg appearance-none cursor-pointer accent-brand"
+                  className="w-full h-2 bg-tertiary rounded-lg appearance-none cursor-pointer accent-brand"
                />
                <div className="flex justify-between mt-2 text-xs text-primary/60 font-medium">
                  <span>₹0</span>
@@ -388,13 +389,13 @@ function App() {
           {/* Search Bar: Conditional on mobile, always on desktop */}
           <div className={`mb-6 ${showMobileSearch ? 'block animate-fade-in' : 'hidden'} lg:block`}>
              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary/50 w-5 h-5" />
                 <input 
                   type="text" 
                   placeholder={selectedCity ? `Search venues in ${selectedCity}...` : 'Search venues...'}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-slate-100 text-slate-900 rounded-xl border border-secondary/30 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-shadow placeholder:text-slate-500"
+                  className="w-full pl-10 pr-4 py-3 bg-tertiary/20 text-primary rounded-xl border border-secondary/30 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-shadow placeholder:text-primary/50"
                   autoFocus={showMobileSearch}
                 />
              </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, MapPin, Users, Check, Star, X, Share2, Heart, ChevronLeft, ChevronRight, Grid } from 'lucide-react';
+import { ArrowLeft, MapPin, Users, Check, Star, X, Share2, Heart, ChevronLeft, ChevronRight, Grid, Clock, Calendar, Info } from 'lucide-react';
 import { Venue } from '../types';
 import { BookingCalendar } from './BookingCalendar';
 
@@ -33,11 +33,22 @@ const REVIEWS = [
   }
 ];
 
+const TIME_SLOTS = [
+  { id: 'morning', label: 'Morning', time: '9:00 AM - 1:00 PM' },
+  { id: 'afternoon', label: 'Afternoon', time: '2:00 PM - 6:00 PM' },
+  { id: 'evening', label: 'Evening', time: '7:00 PM - 11:00 PM' }
+];
+
 export const VenueDetails: React.FC<VenueDetailsProps> = ({ venue, onBack }) => {
   const [showGallery, setShowGallery] = useState(false);
-  const [bookingState, setBookingState] = useState<'IDLE' | 'SUCCESS'>('IDLE');
   const [isSaved, setIsSaved] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Booking Flow State
+  const [bookingStep, setBookingStep] = useState<'SELECTION' | 'CONFIRMATION' | 'SUCCESS'>('SELECTION');
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
+  const [guestCount, setGuestCount] = useState<string>('');
 
   // Combine main image and gallery for the carousel
   const allImages = [venue.imageUrl, ...venue.gallery];
@@ -52,19 +63,51 @@ export const VenueDetails: React.FC<VenueDetailsProps> = ({ venue, onBack }) => 
     setCurrentImageIndex((prev) => (prev - 1 + allImages.length) % allImages.length);
   };
 
-  const handleBook = (e: React.FormEvent) => {
+  const handleProceedToConfirm = (e: React.FormEvent) => {
     e.preventDefault();
-    setBookingState('SUCCESS');
-    setTimeout(() => setBookingState('IDLE'), 3000);
+    if (selectedDate && selectedTimeSlot && guestCount) {
+      setBookingStep('CONFIRMATION');
+    }
+  };
+
+  const handleConfirmBooking = () => {
+    // Simulate API call
+    setTimeout(() => {
+      // Save booking to localStorage
+      try {
+        const newBooking = {
+          id: Date.now().toString(),
+          venueId: venue.id,
+          venueName: venue.name,
+          venueImage: venue.imageUrl,
+          date: selectedDate ? selectedDate.toISOString() : null,
+          timeSlotId: selectedTimeSlot,
+          timeSlotLabel: TIME_SLOTS.find(t => t.id === selectedTimeSlot)?.time,
+          guests: guestCount,
+          price: venue.pricePerEvent,
+          createdAt: new Date().toISOString()
+        };
+
+        const existingBookings = JSON.parse(localStorage.getItem('gather_bookings') || '[]');
+        localStorage.setItem('gather_bookings', JSON.stringify([...existingBookings, newBooking]));
+      } catch (error) {
+        console.error('Failed to save booking:', error);
+      }
+
+      setBookingStep('SUCCESS');
+    }, 800);
   };
 
   const handleShare = () => {
-    // In a real application, this would use the Web Share API or copy to clipboard
     alert(`Link to ${venue.name} copied to clipboard!`);
   };
 
   const handleSave = () => {
     setIsSaved(!isSaved);
+  };
+
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' });
   };
 
   return (
@@ -97,7 +140,7 @@ export const VenueDetails: React.FC<VenueDetailsProps> = ({ venue, onBack }) => 
               <MapPin className="w-4 h-4 mr-1.5" />
               <span className="mr-4">{venue.address}</span>
               <div className="flex items-center bg-tertiary/30 px-2 py-1 rounded-md border border-secondary/20">
-                <Star className="w-4 h-4 text-brand fill-brand mr-1.5" />
+                <Star className="w-4 h-4 text-gold fill-gold mr-1.5" />
                 <span className="font-bold text-primary mr-1">{venue.rating}</span>
                 <span className="text-primary/60 text-sm">({venue.reviews} reviews)</span>
               </div>
@@ -126,7 +169,6 @@ export const VenueDetails: React.FC<VenueDetailsProps> = ({ venue, onBack }) => 
 
         {/* Image Carousel */}
         <div className="relative h-[300px] md:h-[500px] rounded-2xl overflow-hidden mb-8 group bg-tertiary/20 select-none">
-           {/* Main Image */}
            <img 
              src={allImages[currentImageIndex]} 
              alt={`Venue view ${currentImageIndex + 1}`} 
@@ -134,11 +176,9 @@ export const VenueDetails: React.FC<VenueDetailsProps> = ({ venue, onBack }) => 
              onClick={() => setShowGallery(true)}
            />
            
-           {/* Navigation Arrows */}
            <button 
              onClick={handlePrevImage}
              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-primary p-2 rounded-full shadow-lg backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100 disabled:opacity-50"
-             aria-label="Previous image"
            >
              <ChevronLeft className="w-6 h-6" />
            </button>
@@ -146,12 +186,10 @@ export const VenueDetails: React.FC<VenueDetailsProps> = ({ venue, onBack }) => 
            <button 
              onClick={handleNextImage}
              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-primary p-2 rounded-full shadow-lg backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100"
-             aria-label="Next image"
            >
              <ChevronRight className="w-6 h-6" />
            </button>
 
-           {/* Image Counter / Dots */}
            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
              {allImages.map((_, idx) => (
                <button
@@ -160,12 +198,10 @@ export const VenueDetails: React.FC<VenueDetailsProps> = ({ venue, onBack }) => 
                  className={`h-2 rounded-full transition-all shadow-sm ${
                    idx === currentImageIndex ? 'bg-white w-6' : 'bg-white/50 hover:bg-white/80 w-2'
                  }`}
-                 aria-label={`Go to image ${idx + 1}`}
                />
              ))}
            </div>
            
-           {/* View All Button */}
            <button 
              onClick={(e) => { e.stopPropagation(); setShowGallery(true); }}
              className="absolute bottom-4 right-4 bg-white/90 hover:bg-white text-primary px-3 py-1.5 rounded-lg text-sm font-medium backdrop-blur-sm flex items-center transition-colors shadow-sm z-10"
@@ -224,7 +260,6 @@ export const VenueDetails: React.FC<VenueDetailsProps> = ({ venue, onBack }) => 
             <div className="mb-8">
                <h2 className="text-xl font-bold text-primary mb-4">Location</h2>
                <div className="h-64 bg-tertiary/20 rounded-xl w-full relative overflow-hidden border border-secondary/20 flex items-center justify-center group">
-                  {/* Simulated Map */}
                   <div className="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/e/ec/Map_of_New_York_City_%281898%29.jpg')] bg-cover opacity-30"></div>
                   <div className="relative z-10 flex flex-col items-center">
                       <MapPin className="w-10 h-10 text-brand drop-shadow-md mb-2 animate-bounce" />
@@ -240,7 +275,7 @@ export const VenueDetails: React.FC<VenueDetailsProps> = ({ venue, onBack }) => 
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-primary">User Reviews</h2>
                 <div className="flex items-center">
-                   <Star className="w-5 h-5 text-brand fill-brand mr-1" />
+                   <Star className="w-5 h-5 text-gold fill-gold mr-1" />
                    <span className="text-lg font-bold text-primary mr-1">{venue.rating}</span>
                    <span className="text-primary/60">({venue.reviews} reviews)</span>
                 </div>
@@ -260,7 +295,7 @@ export const VenueDetails: React.FC<VenueDetailsProps> = ({ venue, onBack }) => 
                          </div>
                       </div>
                       <div className="flex items-center bg-tertiary/30 px-2 py-1 rounded">
-                         <Star className="w-3.5 h-3.5 text-brand fill-brand mr-1" />
+                         <Star className="w-3.5 h-3.5 text-gold fill-gold mr-1" />
                          <span className="text-sm font-bold text-primary">{review.rating}.0</span>
                       </div>
                     </div>
@@ -269,51 +304,196 @@ export const VenueDetails: React.FC<VenueDetailsProps> = ({ venue, onBack }) => 
                 ))}
               </div>
             </div>
-
           </div>
 
-          {/* Right Column: Booking Sidebar */}
+          {/* Right Column: Booking Flow */}
           <div className="lg:col-span-1">
             <div className="sticky top-24">
-              <div className="bg-white rounded-2xl border border-secondary/30 shadow-xl shadow-primary/5 p-6">
-                <div className="flex justify-between items-end mb-6 pb-4 border-b border-secondary/20">
-                  <div>
-                    <span className="text-primary/60 text-sm">Starting from</span>
-                    <div className="text-2xl font-bold text-primary">₹{venue.pricePerEvent.toLocaleString()}</div>
-                  </div>
-                  <span className="px-2 py-1 bg-secondary/30 text-primary text-xs font-bold rounded uppercase">Available</span>
-                </div>
+              <div className="bg-white rounded-2xl border border-secondary/30 shadow-xl shadow-primary/5 p-6 overflow-hidden relative">
+                
+                {bookingStep === 'SELECTION' && (
+                  <form onSubmit={handleProceedToConfirm} className="animate-fade-in">
+                    <div className="flex justify-between items-end mb-6 pb-4 border-b border-secondary/20">
+                      <div>
+                        <span className="text-primary/60 text-sm">Starting from</span>
+                        <div className="text-2xl font-bold text-primary">₹{venue.pricePerEvent.toLocaleString()}</div>
+                      </div>
+                      <span className="px-2 py-1 bg-secondary/30 text-primary text-xs font-bold rounded uppercase">Available</span>
+                    </div>
 
-                <form onSubmit={handleBook}>
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-primary mb-1.5">Select Date</label>
-                    <BookingCalendar />
-                  </div>
+                    {/* Date Selection */}
+                    <div className="mb-5">
+                      <label className="block text-sm font-bold text-primary mb-2 flex items-center">
+                        <Calendar className="w-4 h-4 mr-1.5 text-brand" /> Select Date
+                      </label>
+                      <BookingCalendar onDateSelect={setSelectedDate} />
+                    </div>
 
-                  <div className="mb-6">
-                     <label className="block text-sm font-medium text-primary mb-1.5">Guests (Approx.)</label>
-                     <input 
-                       type="number" 
-                       min="1" 
-                       max={venue.guestCapacity} 
-                       placeholder={`Max ${venue.guestCapacity}`} 
-                       className="w-full px-3 py-2 bg-tertiary/20 border border-secondary/30 rounded-lg text-primary focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all placeholder:text-primary/40" 
-                       required 
-                     />
-                  </div>
+                    {/* Time Selection (Conditional) */}
+                    {selectedDate && (
+                      <div className="mb-5 animate-fade-in">
+                        <label className="block text-sm font-bold text-primary mb-2 flex items-center">
+                          <Clock className="w-4 h-4 mr-1.5 text-brand" /> Select Time Slot
+                        </label>
+                        <div className="grid grid-cols-1 gap-2">
+                          {TIME_SLOTS.map(slot => (
+                            <button
+                              key={slot.id}
+                              type="button"
+                              onClick={() => setSelectedTimeSlot(slot.id)}
+                              className={`px-4 py-3 rounded-xl border text-left transition-all ${
+                                selectedTimeSlot === slot.id 
+                                  ? 'border-brand bg-brand/5 text-brand font-semibold shadow-sm' 
+                                  : 'border-secondary/20 hover:border-secondary/50 text-primary/70'
+                              }`}
+                            >
+                              <span className="block text-sm">{slot.label}</span>
+                              <span className="block text-xs opacity-70">{slot.time}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
-                  <button 
-                    type="submit" 
-                    className={`w-full py-3.5 rounded-xl font-bold text-white transition-all duration-300 transform active:scale-[0.98] shadow-lg ${
-                      bookingState === 'SUCCESS' 
-                        ? 'bg-secondary hover:bg-secondary/90 shadow-secondary/30' 
-                        : 'bg-brand hover:bg-brand/90 shadow-brand/30'
-                    }`}
-                  >
-                    {bookingState === 'SUCCESS' ? 'Booking Pending Review' : 'Request Booking'}
-                  </button>
-                  <p className="text-xs text-primary/40 text-center mt-3">You won't be charged yet.</p>
-                </form>
+                    {/* Guest Count */}
+                    <div className="mb-6">
+                       <label className="block text-sm font-bold text-primary mb-2 flex items-center">
+                         <Users className="w-4 h-4 mr-1.5 text-brand" /> Guests (Approx.)
+                       </label>
+                       <input 
+                         type="number" 
+                         min="1" 
+                         max={venue.guestCapacity} 
+                         value={guestCount}
+                         onChange={(e) => setGuestCount(e.target.value)}
+                         placeholder={`Max ${venue.guestCapacity}`} 
+                         className="w-full px-4 py-3 bg-tertiary/20 border border-secondary/30 rounded-xl text-primary focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all placeholder:text-primary/40 font-medium" 
+                         required 
+                       />
+                    </div>
+
+                    <button 
+                      type="submit" 
+                      disabled={!selectedDate || !selectedTimeSlot || !guestCount}
+                      className="w-full py-3.5 rounded-xl font-bold text-white transition-all duration-300 transform active:scale-[0.98] shadow-lg bg-brand hover:bg-brand/90 shadow-brand/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Proceed to Confirm
+                    </button>
+                    <p className="text-xs text-primary/40 text-center mt-3">You won't be charged yet.</p>
+                  </form>
+                )}
+
+                {bookingStep === 'CONFIRMATION' && (
+                  <div className="animate-fade-in">
+                    <button 
+                      onClick={() => setBookingStep('SELECTION')}
+                      className="text-sm text-primary/60 hover:text-brand flex items-center mb-4 transition-colors"
+                    >
+                      <ChevronLeft className="w-4 h-4 mr-1" /> Edit Details
+                    </button>
+                    
+                    <h3 className="text-xl font-bold text-primary mb-6">Confirm Request</h3>
+                    
+                    <div className="space-y-4 mb-8 bg-tertiary/30 p-5 rounded-xl border border-secondary/20">
+                      <div className="flex justify-between">
+                        <span className="text-primary/60 text-sm">Venue</span>
+                        <span className="text-primary font-semibold text-sm text-right">{venue.name}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-primary/60 text-sm">Date</span>
+                        <span className="text-primary font-semibold text-sm text-right">{selectedDate ? formatDate(selectedDate) : '-'}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-primary/60 text-sm">Time</span>
+                        <span className="text-primary font-semibold text-sm text-right">
+                          {TIME_SLOTS.find(t => t.id === selectedTimeSlot)?.time}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-primary/60 text-sm">Guests</span>
+                        <span className="text-primary font-semibold text-sm text-right">{guestCount}</span>
+                      </div>
+                      <div className="border-t border-secondary/10 pt-3 mt-2 flex justify-between items-center">
+                        <span className="text-primary font-bold">Total Estimate</span>
+                        <span className="text-brand font-bold text-lg">₹{venue.pricePerEvent.toLocaleString()}</span>
+                      </div>
+                    </div>
+
+                    <div className="bg-blue-50 p-3 rounded-lg flex items-start mb-6">
+                      <Info className="w-4 h-4 text-blue-500 mt-0.5 mr-2 flex-shrink-0" />
+                      <p className="text-xs text-blue-700 leading-relaxed">
+                        This is a booking request. The venue manager will review availability and confirm your slot within 24 hours.
+                      </p>
+                    </div>
+
+                    <button 
+                      onClick={handleConfirmBooking}
+                      className="w-full py-3.5 rounded-xl font-bold text-white transition-all duration-300 transform active:scale-[0.98] shadow-lg bg-brand hover:bg-brand/90 shadow-brand/30"
+                    >
+                      Confirm Booking Request
+                    </button>
+                  </div>
+                )}
+
+                {bookingStep === 'SUCCESS' && (
+                  <div className="animate-fade-in text-center py-8">
+                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 text-green-600 animate-blob">
+                      <Check className="w-8 h-8" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-primary mb-2">Booking Confirmed!</h3>
+                    <p className="text-primary/60 text-sm mb-6">
+                      Your request has been successfully submitted.
+                    </p>
+
+                    {/* Summary Card */}
+                    <div className="bg-tertiary/20 rounded-xl p-4 mb-8 text-left border border-secondary/20">
+                        <div className="flex justify-between mb-2">
+                            <span className="text-primary/60 text-sm">Venue</span>
+                            <span className="text-primary font-bold text-sm">{venue.name}</span>
+                        </div>
+                        <div className="flex justify-between mb-2">
+                            <span className="text-primary/60 text-sm">Date</span>
+                            <span className="text-primary font-bold text-sm">{selectedDate ? formatDate(selectedDate) : '-'}</span>
+                        </div>
+                        <div className="flex justify-between mb-2">
+                            <span className="text-primary/60 text-sm">Time</span>
+                            <span className="text-primary font-bold text-sm">
+                                {TIME_SLOTS.find(t => t.id === selectedTimeSlot)?.time || selectedTimeSlot}
+                            </span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-primary/60 text-sm">Guests</span>
+                            <span className="text-primary font-bold text-sm">{guestCount}</span>
+                        </div>
+                    </div>
+
+                    <button 
+                      onClick={() => {
+                        // Reset for demo purposes, or navigate to a hypothetical bookings page
+                        setBookingStep('SELECTION');
+                        setSelectedDate(null);
+                        setSelectedTimeSlot(null);
+                        setGuestCount('');
+                      }}
+                      className="w-full px-6 py-3 bg-brand text-white font-bold rounded-xl hover:bg-brand/90 transition-colors shadow-lg shadow-brand/20 mb-3"
+                    >
+                      View My Bookings
+                    </button>
+                    
+                    <button 
+                        onClick={() => {
+                        setBookingStep('SELECTION');
+                        setSelectedDate(null);
+                        setSelectedTimeSlot(null);
+                        setGuestCount('');
+                        }}
+                        className="text-brand text-sm font-medium hover:underline"
+                    >
+                        Make Another Booking
+                    </button>
+                  </div>
+                )}
+
               </div>
             </div>
           </div>

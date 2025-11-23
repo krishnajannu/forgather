@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { VenueCard } from './components/VenueCard';
@@ -132,43 +131,43 @@ function App() {
   // --- RENDER HELPERS ---
 
   const renderLanding = () => (
-    <div className="min-h-screen bg-slate-50 relative overflow-hidden flex flex-col pt-16">
+    <div className="min-h-screen bg-white relative overflow-hidden flex flex-col pt-16">
       {/* Decorative Background Elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-         <div className="absolute -top-[20%] -left-[10%] w-[600px] h-[600px] bg-indigo-200/40 rounded-full blur-[100px] mix-blend-multiply animate-blob" />
-         <div className="absolute top-[20%] -right-[10%] w-[500px] h-[500px] bg-purple-200/40 rounded-full blur-[100px] mix-blend-multiply animate-blob animation-delay-2000" />
-         <div className="absolute -bottom-[20%] left-[20%] w-[600px] h-[600px] bg-pink-200/40 rounded-full blur-[100px] mix-blend-multiply animate-blob animation-delay-4000" />
+         <div className="absolute -top-[20%] -left-[10%] w-[600px] h-[600px] bg-brand/10 rounded-full blur-[100px] mix-blend-multiply animate-blob" />
+         <div className="absolute top-[20%] -right-[10%] w-[500px] h-[500px] bg-danger/10 rounded-full blur-[100px] mix-blend-multiply animate-blob animation-delay-2000" />
+         <div className="absolute -bottom-[20%] left-[20%] w-[600px] h-[600px] bg-tertiary/50 rounded-full blur-[100px] mix-blend-multiply animate-blob animation-delay-4000" />
       </div>
   
       <div className="relative z-10 flex-1 flex flex-col justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-12">
          
          {/* Minimal Header Text */}
          <div className="text-center mb-12 space-y-6">
-            <div className="inline-flex items-center px-3 py-1 rounded-full border border-slate-200 bg-white/50 backdrop-blur-sm text-xs font-medium text-slate-500 mb-4 animate-fade-in-up">
-              <Sparkles className="w-3 h-3 mr-2 text-indigo-500" />
+            <div className="inline-flex items-center px-3 py-1 rounded-full border border-secondary/40 bg-white/50 backdrop-blur-sm text-xs font-medium text-primary/70 mb-4 animate-fade-in-up">
+              <Sparkles className="w-3 h-3 mr-2 text-brand" />
               Premium Venue Marketplace
             </div>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-slate-900 tracking-tighter leading-[1.1] animate-fade-in-up delay-100">
-              Crafting <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">unforgettable</span><br className="hidden md:block" /> moments.
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-primary tracking-tighter leading-[1.1] animate-fade-in-up delay-100">
+              Crafting <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand to-danger">unforgettable</span><br className="hidden md:block" /> moments.
             </h1>
-            <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto font-light leading-relaxed animate-fade-in-up delay-200 mb-8">
+            <p className="text-lg md:text-xl text-primary/70 max-w-2xl mx-auto font-light leading-relaxed animate-fade-in-up delay-200 mb-8">
               Discover and book the finest banquet halls, lounges, and resorts.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up delay-300 pt-8">
                 <div className="flex -space-x-3">
                   {[1,2,3,4].map(i => (
-                    <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center overflow-hidden">
+                    <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-tertiary/50 flex items-center justify-center overflow-hidden">
                         <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" className="w-full h-full object-cover" />
                     </div>
                   ))}
-                  <div className="w-10 h-10 rounded-full border-2 border-white bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-xs">
+                  <div className="w-10 h-10 rounded-full border-2 border-white bg-brand/10 text-brand font-bold flex items-center justify-center text-xs">
                     2k+
                   </div>
                 </div>
-                <div className="text-sm font-semibold text-slate-600">
+                <div className="text-sm font-semibold text-primary/80">
                   Trusted by happy customers
-                  <div className="flex text-yellow-400 mt-0.5 justify-center sm:justify-start">
+                  <div className="flex text-brand mt-0.5 justify-center sm:justify-start">
                       {[1,2,3,4,5].map(i => <Star key={i} className="w-3 h-3 fill-current" />)}
                   </div>
                 </div>
@@ -213,7 +212,7 @@ function App() {
                 />
                 
                 {/* Gradient Overlay - Darkened for better text contrast */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black/80 group-hover:via-black/40 group-hover:to-indigo-900/90 transition-all duration-700 z-10" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black/80 group-hover:via-black/40 group-hover:to-brand/80 transition-all duration-700 z-10" />
 
                 {/* Card Content */}
                 <div className="absolute inset-0 z-20 p-6 flex flex-col justify-between">
@@ -231,7 +230,7 @@ function App() {
                         {item.city}
                       </h3>
                       <div className="h-0 overflow-hidden group-hover:h-8 transition-all duration-500">
-                        <p className="text-indigo-200 text-sm font-medium flex items-center mt-1">
+                        <p className="text-tertiary text-sm font-medium flex items-center mt-1">
                           Explore Venues <ArrowRight className="w-4 h-4 ml-2" />
                         </p>
                       </div>
@@ -242,7 +241,7 @@ function App() {
          </div>
          
          {/* Minimal Stats */}
-         <div className="mt-12 py-8 border-t border-slate-200/50 grid grid-cols-2 md:grid-cols-4 gap-8 animate-fade-in-up delay-500">
+         <div className="mt-12 py-8 border-t border-secondary/20 grid grid-cols-2 md:grid-cols-4 gap-8 animate-fade-in-up delay-500">
             {[
               { label: 'Curated Venues', value: '50+' },
               { label: 'Happy Customers', value: '2k+' },
@@ -250,8 +249,8 @@ function App() {
               { label: 'Avg Rating', value: '4.8' },
             ].map((stat, i) => (
                <div key={i} className="text-center md:text-left flex flex-col md:block items-center md:items-start">
-                  <p className="text-2xl md:text-3xl font-bold text-slate-900 mb-1">{stat.value}</p>
-                  <p className="text-xs text-slate-500 font-bold uppercase tracking-widest opacity-70">{stat.label}</p>
+                  <p className="text-2xl md:text-3xl font-bold text-primary mb-1">{stat.value}</p>
+                  <p className="text-xs text-primary/60 font-bold uppercase tracking-widest opacity-70">{stat.label}</p>
                </div>
             ))}
          </div>
@@ -265,12 +264,12 @@ function App() {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Filters Sidebar (Desktop) */}
         <div className="hidden lg:block w-64 flex-shrink-0">
-          <div className="bg-white p-5 rounded-xl border border-slate-200 sticky top-24">
+          <div className="bg-white p-5 rounded-xl border border-secondary/30 sticky top-24">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-slate-900">Filters</h2>
+              <h2 className="text-lg font-bold text-primary">Filters</h2>
               <button 
                 onClick={() => {setPriceRange([0, 200000]); setSelectedTypes([]); setSearchTerm('');}}
-                className="text-xs font-medium text-indigo-600 hover:text-indigo-800"
+                className="text-xs font-medium text-brand hover:text-brand/80"
               >
                 Reset
               </button>
@@ -278,11 +277,11 @@ function App() {
             
             {/* Type Filter */}
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-slate-700 mb-3">Venue Type</h3>
+              <h3 className="text-sm font-semibold text-primary mb-3">Venue Type</h3>
               <div className="space-y-2">
                 {Object.values(VenueType).map(type => (
                   <label key={type} className="flex items-center cursor-pointer group">
-                    <div className={`w-5 h-5 rounded border flex items-center justify-center mr-3 transition-colors ${selectedTypes.includes(type) ? 'bg-indigo-600 border-indigo-600' : 'border-slate-300 bg-white group-hover:border-indigo-400'}`}>
+                    <div className={`w-5 h-5 rounded border flex items-center justify-center mr-3 transition-colors ${selectedTypes.includes(type) ? 'bg-brand border-brand' : 'border-secondary/50 bg-white group-hover:border-brand/50'}`}>
                        {selectedTypes.includes(type) && <CheckIcon className="w-3 h-3 text-white" />}
                     </div>
                     <input 
@@ -291,7 +290,7 @@ function App() {
                       checked={selectedTypes.includes(type)}
                       onChange={() => toggleVenueType(type)}
                     />
-                    <span className={`text-sm ${selectedTypes.includes(type) ? 'text-slate-900 font-medium' : 'text-slate-600'}`}>{type}</span>
+                    <span className={`text-sm ${selectedTypes.includes(type) ? 'text-primary font-medium' : 'text-primary/70'}`}>{type}</span>
                   </label>
                 ))}
               </div>
@@ -299,7 +298,7 @@ function App() {
 
             {/* Price Filter */}
             <div className="mb-6">
-               <h3 className="text-sm font-semibold text-slate-700 mb-3">Price Range (₹)</h3>
+               <h3 className="text-sm font-semibold text-primary mb-3">Price Range (₹)</h3>
                <input 
                   type="range" 
                   min="0" 
@@ -307,9 +306,9 @@ function App() {
                   step="10000"
                   value={priceRange[1]}
                   onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
-                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                  className="w-full h-2 bg-tertiary/60 rounded-lg appearance-none cursor-pointer accent-brand"
                />
-               <div className="flex justify-between mt-2 text-xs text-slate-500 font-medium">
+               <div className="flex justify-between mt-2 text-xs text-primary/60 font-medium">
                  <span>₹0</span>
                  <span>Up to ₹{priceRange[1].toLocaleString()}</span>
                </div>
@@ -319,35 +318,35 @@ function App() {
 
         {/* Mobile Filters Modal */}
         {showFiltersMobile && (
-           <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm lg:hidden flex justify-end">
+           <div className="fixed inset-0 z-50 bg-primary/50 backdrop-blur-sm lg:hidden flex justify-end">
               <div className="w-4/5 max-w-sm bg-white h-full p-6 overflow-y-auto">
                  <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-xl font-bold">Filters</h2>
-                    <button onClick={() => setShowFiltersMobile(false)} className="p-2 bg-slate-100 rounded-full"><X className="w-5 h-5"/></button>
+                    <h2 className="text-xl font-bold text-primary">Filters</h2>
+                    <button onClick={() => setShowFiltersMobile(false)} className="p-2 bg-tertiary/30 rounded-full"><X className="w-5 h-5"/></button>
                  </div>
                  {/* Reused Logic for Mobile UI - Simplified */}
                  <div className="space-y-6">
                     <div>
-                       <h3 className="font-semibold mb-2">Type</h3>
+                       <h3 className="font-semibold mb-2 text-primary">Type</h3>
                        {Object.values(VenueType).map(type => (
-                          <div key={type} onClick={() => toggleVenueType(type)} className={`p-3 mb-2 rounded-lg border ${selectedTypes.includes(type) ? 'border-indigo-600 bg-indigo-50 text-indigo-700' : 'border-slate-200'}`}>
+                          <div key={type} onClick={() => toggleVenueType(type)} className={`p-3 mb-2 rounded-lg border ${selectedTypes.includes(type) ? 'border-brand bg-brand/5 text-brand' : 'border-secondary/30'}`}>
                              {type}
                           </div>
                        ))}
                     </div>
                     <div>
-                       <h3 className="font-semibold mb-2">Max Price: ₹{priceRange[1].toLocaleString()}</h3>
+                       <h3 className="font-semibold mb-2 text-primary">Max Price: ₹{priceRange[1].toLocaleString()}</h3>
                        <input 
                           type="range" 
                           min="0" max="200000" step="5000"
                           value={priceRange[1]}
                           onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
-                          className="w-full accent-indigo-600 h-3 bg-slate-200 rounded-lg"
+                          className="w-full accent-brand h-3 bg-tertiary/60 rounded-lg"
                        />
                     </div>
                     <button 
                        onClick={() => setShowFiltersMobile(false)}
-                       className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl"
+                       className="w-full py-3 bg-brand text-white font-bold rounded-xl"
                     >
                        Show Results
                     </button>
@@ -361,7 +360,7 @@ function App() {
           
           {/* Mobile Header: Title + Actions */}
           <div className="lg:hidden flex items-center justify-between mb-4">
-             <h2 className="text-lg font-bold text-slate-900">
+             <h2 className="text-lg font-bold text-primary">
                {filteredVenues.length} Result{filteredVenues.length !== 1 ? 's' : ''}
              </h2>
              <div className="flex gap-3">
@@ -369,8 +368,8 @@ function App() {
                   onClick={() => setShowMobileSearch(!showMobileSearch)}
                   className={`p-2.5 rounded-xl border transition-colors ${
                     showMobileSearch 
-                      ? 'bg-indigo-600 border-indigo-600 text-white shadow-md' 
-                      : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                      ? 'bg-brand border-brand text-white shadow-md' 
+                      : 'bg-white border-secondary/30 text-primary/70 hover:bg-tertiary/20'
                   }`}
                   aria-label="Toggle search"
                 >
@@ -378,7 +377,7 @@ function App() {
                 </button>
                 <button 
                   onClick={() => setShowFiltersMobile(true)}
-                  className="p-2.5 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50"
+                  className="p-2.5 bg-white border border-secondary/30 rounded-xl text-primary/70 hover:bg-tertiary/20"
                   aria-label="Filters"
                 >
                    <SlidersHorizontal className="w-5 h-5" />
@@ -395,7 +394,7 @@ function App() {
                   placeholder={selectedCity ? `Search venues in ${selectedCity}...` : 'Search venues...'}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-slate-100 text-slate-900 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow placeholder:text-slate-500"
+                  className="w-full pl-10 pr-4 py-3 bg-slate-100 text-slate-900 rounded-xl border border-secondary/30 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-shadow placeholder:text-slate-500"
                   autoFocus={showMobileSearch}
                 />
              </div>
@@ -403,7 +402,7 @@ function App() {
 
           {/* Desktop Title */}
           <div className="hidden lg:block mb-4">
-             <h2 className="text-xl font-bold text-slate-900">{filteredVenues.length} venues found {selectedCity ? `in ${selectedCity}` : ''}</h2>
+             <h2 className="text-xl font-bold text-primary">{filteredVenues.length} venues found {selectedCity ? `in ${selectedCity}` : ''}</h2>
           </div>
           
           {filteredVenues.length > 0 ? (
@@ -413,12 +412,12 @@ function App() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-20 bg-white rounded-2xl border border-slate-200 border-dashed">
-               <div className="inline-flex p-4 rounded-full bg-slate-50 mb-4">
-                  <Search className="w-8 h-8 text-slate-300" />
+            <div className="text-center py-20 bg-white rounded-2xl border border-secondary/30 border-dashed">
+               <div className="inline-flex p-4 rounded-full bg-tertiary/30 mb-4">
+                  <Search className="w-8 h-8 text-secondary" />
                </div>
-               <h3 className="text-lg font-medium text-slate-900">No venues found</h3>
-               <p className="text-slate-500">Try adjusting your filters or search term.</p>
+               <h3 className="text-lg font-medium text-primary">No venues found</h3>
+               <p className="text-primary/60">Try adjusting your filters or search term.</p>
             </div>
           )}
         </div>
@@ -427,7 +426,7 @@ function App() {
   );
 
   return (
-    <div className="bg-slate-50 min-h-screen font-sans">
+    <div className="bg-white min-h-screen font-sans">
       <Navbar 
         selectedCity={selectedCity} 
         onCityChange={handleCitySelect} 
@@ -447,28 +446,28 @@ function App() {
       </main>
       
       {currentView !== 'DETAILS' && (
-        <footer className="bg-white border-t border-slate-200 py-12 mt-auto">
+        <footer className="bg-white border-t border-secondary/20 py-12 mt-auto">
            <div className="max-w-7xl mx-auto px-4 text-center">
-              <p className="text-slate-400 mb-4">&copy; 2024 Gather Venues. All rights reserved.</p>
-              <div className="flex justify-center space-x-6 text-sm text-slate-500">
+              <p className="text-primary/50 mb-4">&copy; 2024 Gather Venues. All rights reserved.</p>
+              <div className="flex justify-center space-x-6 text-sm text-primary/60">
                  <a 
                    href="#" 
                    onClick={(e) => { e.preventDefault(); setCurrentView('PRIVACY'); }} 
-                   className="hover:text-indigo-600"
+                   className="hover:text-brand"
                  >
                    Privacy
                  </a>
                  <a 
                    href="#" 
                    onClick={(e) => { e.preventDefault(); setCurrentView('TERMS'); }} 
-                   className="hover:text-indigo-600"
+                   className="hover:text-brand"
                  >
                    Terms
                  </a>
                  <a 
                    href="#" 
                    onClick={(e) => { e.preventDefault(); setCurrentView('CONTACT'); }} 
-                   className="hover:text-indigo-600"
+                   className="hover:text-brand"
                  >
                    Contact
                  </a>

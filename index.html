@@ -54,6 +54,21 @@
         animation: fadeInUp 0.5s ease-out forwards;
       }
     </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#262626',
+              secondary: '#ACBFA4',
+              tertiary: '#E2E8CE',
+              brand: '#FF7F11',
+              danger: '#FF1B1C',
+            }
+          }
+        }
+      }
+    </script>
   <script type="importmap">
 {
   "imports": {
@@ -64,10 +79,8 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
-  <body class="bg-slate-50 text-slate-900 antialiased">
+  <body class="bg-white text-primary antialiased">
     <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
-</body>
+  </body>
 </html>
